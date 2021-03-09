@@ -1,0 +1,19 @@
+.CountScreen {
+    background-color: gray;
+    display: flex;
+    flex-direction: column;
+    margin-left: 10px;
+    width: 200px;
+    height: 200px;
+    padding: 15px;
+    align-items: center;
+    justify-content: center;
+}
+
+.CountScreen .Title {
+    color: brown;
+}
+
+.CountScreen button {
+    margin-left: 5px;
+}

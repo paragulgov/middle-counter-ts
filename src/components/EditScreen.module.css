@@ -1,0 +1,16 @@
+.EditScreen {
+    background-color: dimgrey;
+    display: flex;
+    flex-direction: column;
+    width: 200px;
+    height: 200px;
+    padding: 15px;
+    align-items: center;
+    justify-content: center;
+}
+
+.EditScreen input {
+    width: 100px;
+    margin-left: 5px;
+    margin-bottom: 5px;
+}
