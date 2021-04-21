@@ -1,14 +1,15 @@
 import React, {ChangeEvent, useEffect, useState} from 'react'
 import styles from './EditScreen.module.css'
 import Button from './Button'
+import {toggleLoad} from '../redux/reducer'
 
-type PropsType = {
+type EditScreenPropsType = {
+    dispatch: (value: any) => void
     applySettings: (minValue: number, maxValue: number) => void
     load: boolean
-    setLoad: (value: boolean) => void
 }
 
-function EditScreen(props: PropsType) {
+function EditScreen(props: EditScreenPropsType) {
 
     const [minValue, setMinValue] = useState(0)
     const [maxValue, setMaxValue] = useState(5)
@@ -26,9 +27,9 @@ function EditScreen(props: PropsType) {
 
     const changeMin = (e: ChangeEvent<HTMLInputElement>) => {
         if (!props.load) {
-            props.setLoad(true)
+            props.dispatch(toggleLoad(true))
         }
-        let value = Number(e.currentTarget.value)
+        const value = Number(e.currentTarget.value)
         if (value >= 0 && value < maxValue) {
             setMinValue(value)
         }
@@ -36,7 +37,7 @@ function EditScreen(props: PropsType) {
 
     const changeMax = (e: ChangeEvent<HTMLInputElement>) => {
         if (!props.load) {
-            props.setLoad(true)
+            props.dispatch(toggleLoad(true))
         }
         let value = Number(e.currentTarget.value)
         if (value > minValue) {

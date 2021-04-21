@@ -1,49 +1,59 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect} from 'react'
 import styles from './App.module.css'
 import CountScreen from './components/CountScreen'
 import EditScreen from './components/EditScreen'
+import {useDispatch, useSelector} from 'react-redux'
+import {CounterType, inc, reset, setMax, setMin, toggleLoad} from './redux/reducer'
+import {AppRootStateType} from './redux/store'
 
 function App() {
-    const [min, setMin] = useState(1)
-    const [max, setMax] = useState(5)
-    const [count, setCount] = useState(min)
-    const [load, setLoad] = useState<boolean>(false)
+    const state = useSelector<AppRootStateType, CounterType>(state => state.counter)
+
+    const dispatch = useDispatch()
 
     useEffect(() => {
-        let minCount = localStorage.getItem('minValue')
-        let maxCount = localStorage.getItem('maxValue')
-        if (minCount) {
-            setCount(JSON.parse(minCount))
-            setMin(JSON.parse(minCount))
+        const min = localStorage.getItem('minValue')
+        const max = localStorage.getItem('maxValue')
+        if (min) {
+            dispatch(setMin(Number(JSON.parse(min))))
         }
-        if (maxCount) {
-            setMax(JSON.parse(maxCount))
+        if (max) {
+            dispatch(setMax(Number(JSON.parse(max))))
         }
     }, [])
 
     const incHandler = () => {
-        if (count < max) {
-            setCount(count + 1)
+        if (state.count < state.max) {
+            dispatch(inc())
         }
     }
 
     const resetHandler = () => {
-        setCount(min)
+        dispatch(reset())
     }
 
     const applySettings = (minValue: number, maxValue: number) => {
         localStorage.setItem('minValue', JSON.stringify(minValue))
         localStorage.setItem('maxValue', JSON.stringify(maxValue))
-        setLoad(false)
-        setCount(minValue)
-        setMin(minValue)
-        setMax(maxValue)
+        dispatch(toggleLoad(false))
+        dispatch(setMin(minValue))
+        dispatch(setMax(maxValue))
     }
 
     return (
         <div className={styles.App}>
-            <EditScreen applySettings={applySettings} load={load} setLoad={setLoad} />
-            <CountScreen count={count} incHandler={incHandler} resetHandler={resetHandler} load={load} max={max} />
+            <EditScreen
+                applySettings={applySettings}
+                load={state.load}
+                dispatch={dispatch}
+            />
+            <CountScreen
+                resetHandler={resetHandler}
+                incHandler={incHandler}
+                count={state.count}
+                load={state.load}
+                max={state.max}
+            />
         </div>
     )
 }
